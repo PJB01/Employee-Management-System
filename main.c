@@ -19,8 +19,7 @@ int main(void)
     printf("3.) Remove Employee\n");
     printf("4.) View Employee Records\n");
     printf("5.) View Employee Scheduling Data\n");
-    printf("6.) Create Schedule\n");
-    printf("7.) Exit System\n");
+    printf("6.) Exit System\n");
     scanf("%d",&selectOption);
     switch(selectOption){
     case 1:
@@ -62,29 +61,13 @@ struct employee
     float hourlyRate;
     int minHours;
     int maxHours;
-    int monday;
-    int tuesday;
-    int wednesday;
-    int thursday;
-    int friday;
-    int saturday;
-    int sunday;
+    //when set to 0 the employees unavailable, 1 means they can only work first shift, 2 means they can only work second shift, 3 means they can work any shift
+    int dayOfWeek[7];
 };
 struct employee e;
-//when set to 0 the employees unavailable, 1 means they can only work first shift, 2 means they can only work second shift, 3 means they can work any shift
-struct scheduleConstraints
-{
-    int monday;
-    int tuesday;
-    int wednesday;
-    int thursday;
-    int friday;
-    int saturday;
-    int sunday;
-};
-struct scheduleConstraints c;
 
 void addEmployee(void){
+    int i;
     char addEmp = 'y';
     char sRestrictions = '0';
     FILE *fp;
@@ -119,24 +102,25 @@ printf("Press y or n.\n");
 scanf(" %c",&sRestrictions);
 }else if(sRestrictions == 'y'){
         printf("\n0 = UNAVAILIABLE\n1 = RESTRICTED TO FIRST SHIFT\n2 = RESTRICTED FOR SECOND SHIFT\n3 = AVAILABLE\n");
-    printf("Does %s %s have any schedule restrictions on Monday?\n :\n",e.fName,e.lName);
-scanf(" %d",&c.monday);
-    printf("Does %s %s have any schedule restrictions on Tuesday?\n :\n",e.fName,e.lName);
-scanf(" %d",&c.tuesday);
-    printf("Does %s %s have any schedule restrictions on Wednesday?\n :\n",e.fName,e.lName);
-scanf(" %d",&c.wednesday);
-    printf("Does %s %s have any schedule restrictions on Thursday?\n :\n",e.fName,e.lName);
-scanf(" %d",&c.thursday);
-    printf("Does %s %s have any schedule restrictions on Friday?\n :\n",e.fName,e.lName);
-scanf(" %d",&c.friday);
-    printf("Does %s %s have any schedule restrictions on Saturday?\n :\n",e.fName,e.lName);
-scanf(" %d",&c.saturday);
-    printf("Does %s %s have any schedule restrictions on Sunday?\n :\n",e.fName,e.lName);
-scanf(" %d",&c.sunday);
+    printf("Does %s %s have any schedule restrictions on Monday?:\n",e.fName,e.lName);
+scanf(" %d",&e.dayOfWeek[0]);
+    printf("Does %s %s have any schedule restrictions on Tuesday?:\n",e.fName,e.lName);
+scanf(" %d",&e.dayOfWeek[1]);
+    printf("Does %s %s have any schedule restrictions on Wednesday?:\n",e.fName,e.lName);
+scanf(" %d",&e.dayOfWeek[2]);
+    printf("Does %s %s have any schedule restrictions on Thursday?:\n",e.fName,e.lName);
+scanf(" %d",&e.dayOfWeek[3]);
+    printf("Does %s %s have any schedule restrictions on Friday?:\n",e.fName,e.lName);
+scanf(" %d",&e.dayOfWeek[4]);
+    printf("Does %s %s have any schedule restrictions on Saturday?:\n",e.fName,e.lName);
+scanf(" %d",&e.dayOfWeek[5]);
+    printf("Does %s %s have any schedule restrictions on Sunday?:\n",e.fName,e.lName);
+scanf(" %d",&e.dayOfWeek[6]);
 } else if(sRestrictions == 'n'){
-c.monday = 3, c.tuesday = 3, c.wednesday = 3, c.thursday = 3, c.friday = 3, c.saturday = 3, c.sunday = 3;
+    for(i = 0; i <= 6; ++i)
+    e.dayOfWeek[i] = 3;
 }
-fprintf(fp,"\n%s %s %d %d %s %f %d %d %d %d %d %d %d %d %d",e.fName,e.lName,e.id,e.age,e.jobTitle,e.hourlyRate,e.minHours,e.maxHours,c.monday,c.tuesday,c.wednesday,c.thursday,c.friday,c.saturday,c.sunday);
+fprintf(fp,"\n%s %s %d %d %s %f %d %d %d %d %d %d %d %d %d",e.fName,e.lName,e.id,e.age,e.jobTitle,e.hourlyRate,e.minHours,e.maxHours,e.dayOfWeek[0],e.dayOfWeek[1],e.dayOfWeek[2],e.dayOfWeek[3],e.dayOfWeek[4],e.dayOfWeek[5],e.dayOfWeek[6]);
 
 //asks if u want to add a new employee
     printf("\nWould you like to add another employee? (Y/N)");
@@ -175,15 +159,15 @@ printf("\n\n\n");
     scanf(" %d",&modEmp);
         while(!feof(fp) && !found){
         ++i;
-        fscanf(fp,"\n%s %s %d %d %s %f %d %d %d %d %d %d %d %d %d",e.fName,e.lName,&e.id,&e.age,e.jobTitle,&e.hourlyRate,&e.minHours,&e.maxHours,&c.monday,&c.tuesday,&c.wednesday,&c.thursday,&c.friday,&c.saturday,&c.sunday);
+        fscanf(fp,"\n%s %s %d %d %s %f %d %d %d %d %d %d %d %d %d",e.fName,e.lName,&e.id,&e.age,e.jobTitle,&e.hourlyRate,&e.minHours,&e.maxHours,&e.dayOfWeek[0],&e.dayOfWeek[1],&e.dayOfWeek[2],&e.dayOfWeek[3],&e.dayOfWeek[4],&e.dayOfWeek[5],&e.dayOfWeek[6]);
         if(i == modEmp){
         found = 1;
         printf("\nEMPLOYEE #%d's RECORDS\n",i);
-        printf("First Name\t\tLast Name\t\tID\tAge\tTitle\tHourly Rate   Min Hours   Max Hours\n");
-        printf("\n%s\t  %s\t\t%d\t%d\t%s \t%f\t%d\t\t%d\n",e.fName,e.lName,e.id,e.age,e.jobTitle,e.hourlyRate,e.minHours,e.maxHours);
+        printf("First Name\tLast Name\t\tID\tAge\tTitle\tHourly Rate   Min Hours   Max Hours\n");
+        printf("%s\t\t%s\t\t\t%d\t%d\t%s\t$%g\t      %d\t\t  %d\n",e.fName,e.lName,e.id,e.age,e.jobTitle,e.hourlyRate,e.minHours,e.maxHours);
         printf("\nSCHEDULING DATA FOR EMPLOYEE #%d\n",i);
         printf("Mon Tue Wed Thu Fri Sat Sun\n");
-        printf(" %d   %d   %d   %d   %d   %d   %d\n",c.monday,c.tuesday,c.wednesday,c.thursday,c.friday,c.saturday,c.sunday);
+        printf(" %d   %d   %d   %d   %d   %d   %d\n",e.dayOfWeek[0],e.dayOfWeek[1],e.dayOfWeek[2],e.dayOfWeek[3],e.dayOfWeek[4],e.dayOfWeek[5],e.dayOfWeek[6]);
         printf("\n0 = UNAVAILIABLE\n1 = RESTRICTED TO FIRST SHIFT\n2 = RESTRICTED FOR SECOND SHIFT\n3 = AVAILABLE\n");
         printf("\nAre you sure you want to modify employee #%d? (Y/N)",i);
         scanf(" %c", &choice);
@@ -194,7 +178,7 @@ printf("\n\n\n");
         //copys all content from old file to new file beside employee to mod
         while(!feof(fp)){
         ++j;
-        fscanf(fp,"\n%s %s %d %d %s %f %d %d %d %d %d %d %d %d %d",e.fName,e.lName,&e.id,&e.age,e.jobTitle,&e.hourlyRate,&e.minHours,&e.maxHours,&c.monday,&c.tuesday,&c.wednesday,&c.thursday,&c.friday,&c.saturday,&c.sunday);
+        fscanf(fp,"\n%s %s %d %d %s %f %d %d %d %d %d %d %d %d %d",e.fName,e.lName,&e.id,&e.age,e.jobTitle,&e.hourlyRate,&e.minHours,&e.maxHours,&e.dayOfWeek[0],&e.dayOfWeek[1],&e.dayOfWeek[2],&e.dayOfWeek[3],&e.dayOfWeek[4],&e.dayOfWeek[5],&e.dayOfWeek[6]);
         if(j != modEmp)
         fprintf(fp2,"%s\t%s\t%d\t%d\t%s\t%f\t%d\t%d\n",e.fName,e.lName,e.id,e.age,e.jobTitle,e.hourlyRate,e.minHours,e.maxHours);
         }
@@ -224,26 +208,26 @@ if(sRestrictions != 'y' && sRestrictions != 'n'){
 printf("Press y or n.\n");
 scanf(" %c",&sRestrictions);
 }else if(sRestrictions == 'y'){
-    printf("Does %s %s have any schedule restrictions on Monday? :\n",e.fName,e.lName);
-scanf(" %d",&c.monday);
-    printf("Does %s %s have any schedule restrictions on Tuesday? :\n",e.fName,e.lName);
-scanf(" %d",&c.tuesday);
-    printf("Does %s %s have any schedule restrictions on Wednesday? :\n",e.fName,e.lName);
-scanf(" %d",&c.wednesday);
-    printf("Does %s %s have any schedule restrictions on Thursday? :\n",e.fName,e.lName);
-scanf(" %d",&c.thursday);
-    printf("Does %s %s have any schedule restrictions on Friday? :\n",e.fName,e.lName);
-scanf(" %d",&c.friday);
-    printf("Does %s %s have any schedule restrictions on Saturday? :\n",e.fName,e.lName);
-scanf(" %d",&c.saturday);
-    printf("Does %s %s have any schedule restrictions on Sunday? :\n",e.fName,e.lName);
-scanf(" %d",&c.sunday);
+    printf("Does %s %s have any schedule restrictions on Monday?:\n",e.fName,e.lName);
+scanf(" %d",&e.dayOfWeek[0]);
+    printf("Does %s %s have any schedule restrictions on Tuesday?:\n",e.fName,e.lName);
+scanf(" %d",&e.dayOfWeek[1]);
+    printf("Does %s %s have any schedule restrictions on Wednesday?:\n",e.fName,e.lName);
+scanf(" %d",&e.dayOfWeek[2]);
+    printf("Does %s %s have any schedule restrictions on Thursday?:\n",e.fName,e.lName);
+scanf(" %d",&e.dayOfWeek[3]);
+    printf("Does %s %s have any schedule restrictions on Friday?:\n",e.fName,e.lName);
+scanf(" %d",&e.dayOfWeek[4]);
+    printf("Does %s %s have any schedule restrictions on Saturday?:\n",e.fName,e.lName);
+scanf(" %d",&e.dayOfWeek[5]);
+    printf("Does %s %s have any schedule restrictions on Sunday?:\n",e.fName,e.lName);
+scanf(" %d",&e.dayOfWeek[6]);
 } else if(sRestrictions == 'n'){
-c.monday = 3, c.tuesday = 3, c.wednesday = 3, c.thursday = 3, c.friday = 3, c.saturday = 3, c.sunday = 3;
+    for(i = 0; i <= 6; ++i)
+    e.dayOfWeek[i] = 3;
 }
-//if no modify availability will old data be scanned
-        fscanf(fp,"\n%s %s %d %d %s %f %d %d %d %d %d %d %d %d %d",e.fName,e.lName,&e.id,&e.age,e.jobTitle,&e.hourlyRate,&e.minHours,&e.maxHours,&c.monday,&c.tuesday,&c.wednesday,&c.thursday,&c.friday,&c.saturday,&c.sunday);
-        fprintf(fp2,"\n%s %s %d %d %s %f %d %d %d %d %d %d %d %d %d",e.fName,e.lName,e.id,e.age,e.jobTitle,e.hourlyRate,e.minHours,e.maxHours,c.monday,c.tuesday,c.wednesday,c.thursday,c.friday,c.saturday,c.sunday);
+        fscanf(fp,"\n%s %s %d %d %s %f %d %d %d %d %d %d %d %d %d",e.fName,e.lName,&e.id,&e.age,e.jobTitle,&e.hourlyRate,&e.minHours,&e.maxHours,&e.dayOfWeek[0],&e.dayOfWeek[1],&e.dayOfWeek[2],&e.dayOfWeek[3],&e.dayOfWeek[4],&e.dayOfWeek[5],&e.dayOfWeek[6]);
+        fprintf(fp2,"\n%s %s %d %d %s %f %d %d %d %d %d %d %d %d %d",e.fName,e.lName,e.id,e.age,e.jobTitle,e.hourlyRate,e.minHours,e.maxHours,e.dayOfWeek[0],e.dayOfWeek[1],e.dayOfWeek[2],e.dayOfWeek[3],e.dayOfWeek[4],e.dayOfWeek[5],e.dayOfWeek[6]);
         fclose(fp2);
         fp2 = NULL;
     fclose(fp);
@@ -280,7 +264,7 @@ void viewEmployeeData(void){
     //loop to print employee data
     while(!feof(fp) && !found){
         ++i;
-        fscanf(fp,"\n%s %s %d %d %s %f %d %d %d %d %d %d %d %d %d",e.fName,e.lName,&e.id,&e.age,e.jobTitle,&e.hourlyRate,&e.minHours,&e.maxHours,&c.monday,&c.tuesday,&c.wednesday,&c.thursday,&c.friday,&c.saturday,&c.sunday);
+        fscanf(fp,"\n%s %s %d %d %s %f %d %d %d %d %d %d %d %d %d",e.fName,e.lName,&e.id,&e.age,e.jobTitle,&e.hourlyRate,&e.minHours,&e.maxHours,&e.dayOfWeek[0],&e.dayOfWeek[1],&e.dayOfWeek[2],&e.dayOfWeek[3],&e.dayOfWeek[4],&e.dayOfWeek[5],&e.dayOfWeek[6]);
         if(strlen(e.fName) == 0)
         found = 1;
         printf("\nEmployee %d.) %s\t\t%s\t\t\t%d\t%d\t%s\t$%g\t      %d\t\t  %d\n",i,e.fName,e.lName,e.id,e.age,e.jobTitle,e.hourlyRate,e.minHours,e.maxHours);
@@ -306,7 +290,7 @@ printf("\n\n\n");
     scanf(" %d",&removeEmp);
         while(!feof(fp) && !found){
         ++i;
-        fscanf(fp,"\n%s %s %d %d %s %f %d %d %d %d %d %d %d %d %d",e.fName,e.lName,&e.id,&e.age,e.jobTitle,&e.hourlyRate,&e.minHours,&e.maxHours,&c.monday,&c.tuesday,&c.wednesday,&c.thursday,&c.friday,&c.saturday,&c.sunday);
+        fscanf(fp,"\n%s %s %d %d %s %f %d %d %d %d %d %d %d %d %d",e.fName,e.lName,&e.id,&e.age,e.jobTitle,&e.hourlyRate,&e.minHours,&e.maxHours,&e.dayOfWeek[0],&e.dayOfWeek[1],&e.dayOfWeek[2],&e.dayOfWeek[3],&e.dayOfWeek[4],&e.dayOfWeek[5],&e.dayOfWeek[6]);
         if(i == removeEmp){
         found = 1;
         printf("\nEmployee %d.) %s\t  %s\t\t%d\t%d\t%s \t%f\t%d\t\t%d\n",i,e.fName,e.lName,e.id,e.age,e.jobTitle,e.hourlyRate,e.minHours,e.maxHours);
@@ -322,7 +306,7 @@ printf("\n\n\n");
         perror("Error in opening file");
         while(!feof(fp)){
         ++j;
-        fscanf(fp,"\n%s %s %d %d %s %f %d %d %d %d %d %d %d %d %d",e.fName,e.lName,&e.id,&e.age,e.jobTitle,&e.hourlyRate,&e.minHours,&e.maxHours,&c.monday,&c.tuesday,&c.wednesday,&c.thursday,&c.friday,&c.saturday,&c.sunday);
+        fscanf(fp,"\n%s %s %d %d %s %f %d %d %d %d %d %d %d %d %d",e.fName,e.lName,&e.id,&e.age,e.jobTitle,&e.hourlyRate,&e.minHours,&e.maxHours,&e.dayOfWeek[0],&e.dayOfWeek[1],&e.dayOfWeek[2],&e.dayOfWeek[3],&e.dayOfWeek[4],&e.dayOfWeek[5],&e.dayOfWeek[6]);
         if(j != removeEmp)
         fprintf(fp2,"%s\t%s\t%d\t%d\t%s\t%f\t%d\t%d\n",e.fName,e.lName,e.id,e.age,e.jobTitle,e.hourlyRate,e.minHours,e.maxHours);
         }
@@ -361,8 +345,8 @@ void viewEmployeeScheduleData(void){
     printf("EMPLOYEE AVAILABILITY\n");
     printf("\nName:\t\tMon Tue Wed Thu Fri Sat Sun\t   Min Hours\t  Max Hours\n");
     while(!feof(fp)){
-    fscanf(fp,"\n%s %s %d %d %s %f %d %d %d %d %d %d %d %d %d",e.fName,e.lName,&e.id,&e.age,e.jobTitle,&e.hourlyRate,&e.minHours,&e.maxHours,&c.monday,&c.tuesday,&c.wednesday,&c.thursday,&c.friday,&c.saturday,&c.sunday);
-    printf("%s %s\t %d   %d   %d   %d   %d   %d   %d\t\t%d\t\t%d\n",e.fName,e.lName,c.monday,c.tuesday,c.wednesday,c.thursday,c.friday,c.saturday,c.sunday,e.minHours,e.maxHours);
+    fscanf(fp,"\n%s %s %d %d %s %f %d %d %d %d %d %d %d %d %d",e.fName,e.lName,&e.id,&e.age,e.jobTitle,&e.hourlyRate,&e.minHours,&e.maxHours,&e.dayOfWeek[0],&e.dayOfWeek[1],&e.dayOfWeek[2],&e.dayOfWeek[3],&e.dayOfWeek[4],&e.dayOfWeek[5],&e.dayOfWeek[6]);
+    printf("%s %s\t %d   %d   %d   %d   %d   %d   %d\t\t%d\t\t%d\n",e.fName,e.lName,e.dayOfWeek[0],e.dayOfWeek[1],e.dayOfWeek[2],e.dayOfWeek[3],e.dayOfWeek[4],e.dayOfWeek[5],e.dayOfWeek[6],e.minHours,e.maxHours);
 
 }
     printf("\n0 = UNAVAILIABLE\n1 = RESTRICTED TO FIRST SHIFT\n2 = RESTRICTED FOR SECOND SHIFT\n3 = AVAILABLE\n\n");
